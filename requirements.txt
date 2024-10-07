@@ -1,0 +1,7 @@
+Django>=5.0, <5.2
+pip~=24.2
+asgiref~=3.8.1
+sqlparse~=0.5.1
+setuptools~=65.5.0
+django-storages[s3]
+python-decouple
