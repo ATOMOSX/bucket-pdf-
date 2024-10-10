@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 # Importar la librería decouple para leer las variables de entorno
 from decouple import config
+import os
 
 # try:
 #     from decouple import config
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pdf',
 ]
 
 MIDDLEWARE = [
@@ -125,30 +127,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CLOUDFLARE_R2_BUCKET=config("CLOUDFLARE_R2_BUCKET")
-CLOUDFLARE_R2_BUCKET_ENDPOINT=config("CLOUDFLARE_R2_BUCKET_ENDPOINT")
-CLOUDFLARE_R2_ACCESS_KEY=config("CLOUDFLARE_R2_ACCESS_KEY")
-CLOUDFLARE_R2_SECRET_KEY=config("CLOUDFLARE_R2_SECRET_KEY")
 
-CLOUDFLARE_R2_CONFIG_OPTIONS = {
-    "bucket_name": CLOUDFLARE_R2_BUCKET,
-    "access_key": CLOUDFLARE_R2_ACCESS_KEY,
-    "secret_key": CLOUDFLARE_R2_SECRET_KEY,
-    "bucket_endpoint": CLOUDFLARE_R2_BUCKET_ENDPOINT,
-    "default_acl": "public-read",
-    "signature_version": "s3v4",
-}
+# Configuraciones de Cloudflare R2 (similar a AWS S3)
+CLOUDFLARE_R2_ACCESS_KEY_ID = os.getenv("CLOUDFLARE_R2_ACCESS_KEY_ID")
+CLOUDFLARE_R2_SECRET_ACCESS_KEY = os.getenv("CLOUDFLARE_R2_SECRET_ACCESS_KEY")
+CLOUDFLARE_R2_BUCKET_NAME = os.getenv("CLOUDFLARE_R2_BUCKET_NAME")
+CLOUDFLARE_R2_ENDPOINT_URL = os.getenv("CLOUDFLARE_R2_ENDPOINT_URL")
 
-STORAGES = {
-    "default": {
-        "BACKEND": "helpers.cloudflare.storage.MediaFileStorage", #django-storages[s3]
-        "OPTIONS": CLOUDFLARE_R2_CONFIG_OPTIONS,
-    }, # default storage for static files -> user /pdf/ file
-    "staticfiles": {
-        "BACKEND": "helpers.cloudflare.storage.StaticFileStorage", #django-storages[s3]
-        "OPTIONS": CLOUDFLARE_R2_CONFIG_OPTIONS,
-    } # staticfiles storage for static files -> user /static/ file
-}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
